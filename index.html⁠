@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academia & Agencia EDRM — Venezuela</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+    .neon-border { border: 1px solid #00f0ff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+
+  <!-- ENCABEZADO Y NAVEGACIÓN -->
+  <header class="glass sticky top-0 z-50 px-4 py-3 flex justify-between items-center border-b border-slate-800">
+    <div class="flex items-center gap-2">
+      <div class="w-9 h-9 rounded-full bg-cyan-500 flex items-center justify-center font-bold text-slate-950 text-lg">E</div>
+      <div>
+        <h1 class="font-bold text-base leading-none text-cyan-400">EDRM ACADEMIA</h1>
+        <p class="text-[10px] text-slate-400">República Bolivariana de Venezuela</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="bcvBadge" class="bg-slate-800 text-cyan-300 text-xs px-2 py-1 rounded border border-cyan-500/30">BCV: Cargas...</span>
+      <button onclick="toggleAdminModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700">🔑 Admin</button>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL (NAVEGACIÓN POR PESTAÑAS) -->
+  <main class="flex-1 p-4 max-w-4xl mx-auto w-full space-y-6">
+
+    <!-- BARRA DE SECCIONES -->
+    <nav class="flex bg-slate-900 p-1 rounded-xl border border-slate-800 gap-1 text-xs font-medium overflow-x-auto">
+      <button onclick="switchTab('cursos')" id="tab-cursos" class="flex-1 py-2 px-3 rounded-lg bg-cyan-500 text-slate-950 font-bold">🎓 Cursos</button>
+      <button onclick="switchTab('agencia')" id="tab-agencia" class="flex-1 py-2 px-3 rounded-lg text-slate-400 hover:text-white">💼 Servicios</button>
+      <button onclick="switchTab('aula')" id="tab-aula" class="flex-1 py-2 px-3 rounded-lg text-slate-400 hover:text-white">📱 Mi Aula</button>
+      <button onclick="switchTab('resenas')" id="tab-resenas" class="flex-1 py-2 px-3 rounded-lg text-slate-400 hover:text-white">⭐ Reseñas</button>
+    </nav>
+
+    <!-- 1. CATÁLOGO DE CURSOS -->
+    <section id="sec-cursos" class="space-y-4">
+      <h2 class="text-xl font-bold text-cyan-400 border-b border-slate-800 pb-2">Formación Académica en Marketing</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        
+        <!-- Curso 1 -->
+        <div class="glass p-4 rounded-xl space-y-3 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400">Fase 1 · Principiante</span>
+            <h3 class="font-bold text-lg text-white mt-1">Fundamentos de Marketing Digital</h3>
+            <p class="text-xs text-slate-400 mt-1">Conceptos base, cliente ideal (Buyer Persona), propuesta de valor y embudo básico de captación.</p>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+            <div>
+              <p class="text-lg font-extrabold text-cyan-400">$10 USD</p>
+              <p id="price-c1-ves" class="text-[10px] text-slate-400">Calculando Bs...</p>
+            </div>
+            <button onclick="openPaymentModal('Curso: Principiante', 10)" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-4 py-2 rounded-lg font-bold text-xs">Inscribirme</button>
+          </div>
+        </div>
+
+        <!-- Curso 2 -->
+        <div class="glass p-4 rounded-xl space-y-3 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">Fase 2 · Intermedio</span>
+            <h3 class="font-bold text-lg text-white mt-1">Marketing Completo + Copywriting</h3>
+            <p class="text-xs text-slate-400 mt-1">Publicidad efectiva, fórmulas persuasivas (AIDA, PAS), creación de anuncios y capacitaciones de ventas.</p>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+            <div>
+              <p class="text-lg font-extrabold text-cyan-400">$15 USD</p>
+              <p id="price-c2-ves" class="text-[10px] text-slate-400">Calculando Bs...</p>
+            </div>
+            <button onclick="openPaymentModal('Curso: Intermedio', 15)" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-4 py-2 rounded-lg font-bold text-xs">Inscribirme</button>
+          </div>
+        </div>
+
+        <!-- Curso 3 -->
+        <div class="glass p-4 rounded-xl space-y-3 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">Fase 3 · Avanzado</span>
+            <h3 class="font-bold text-lg text-white mt-1">Gestión & Monetización de Redes</h3>
+            <p class="text-xs text-slate-400 mt-1">Manejo profesional de redes, estrategias de venta por WhatsApp, manejo de objeciones y cierres.</p>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+            <div>
+              <p class="text-lg font-extrabold text-cyan-400">$25 USD</p>
+              <p id="price-c3-ves" class="text-[10px] text-slate-400">Calculando Bs...</p>
+            </div>
+            <button onclick="openPaymentModal('Curso: Avanzado', 25)" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-4 py-2 rounded-lg font-bold text-xs">Inscribirme</button>
+          </div>
+        </div>
+
+        <!-- Curso 4 -->
+        <div class="glass p-4 rounded-xl space-y-3 flex flex-col justify-between border border-cyan-500/40">
+          <div>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">Fase 4 · Full Máster + IA</span>
+            <h3 class="font-bold text-lg text-white mt-1">Marketing, Redes e Inteligencia Artificial</h3>
+            <p class="text-xs text-slate-400 mt-1">Estrategia omnicanal, monetización avanzada y uso de herramientas de IA (ChatGPT, Midjourney) para negocios.</p>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+            <div>
+              <p class="text-lg font-extrabold text-cyan-400">$40 USD</p>
+              <p id="price-c4-ves" class="text-[10px] text-slate-400">Calculando Bs...</p>
+            </div>
+            <button onclick="openPaymentModal('Curso: Full Máster + IA', 40)" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-4 py-2 rounded-lg font-bold text-xs">Inscribirme</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. SERVICIOS DE AGENCIA -->
+    <section id="sec-agencia" class="space-y-4 hidden">
+      <h2 class="text-xl font-bold text-cyan-400 border-b border-slate-800 pb-2">Servicios de Agencia Publicitaria</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="glass p-4 rounded-xl space-y-2">
+          <h3 class="font-bold text-white">Diseño de Flyer Publicitario</h3>
+          <p class="text-xs text-slate-400">Diseño profesional de alto impacto para redes sociales.</p>
+          <div class="flex justify-between items-center pt-2">
+            <span class="font-bold text-cyan-400">$15 USD</span>
+            <button onclick="openPaymentModal('Servicio: Flyer', 15)" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg text-xs font-semibold">Contratar</button>
+          </div>
+        </div>
+        <div class="glass p-4 rounded-xl space-y-2">
+          <h3 class="font-bold text-white">Auditoría Estratégica</h3>
+          <p class="text-xs text-slate-400">Diagnóstico completo de tus redes y plan de mejora.</p>
+          <div class="flex justify-between items-center pt-2">
+            <span class="font-bold text-cyan-400">$20 USD</span>
+            <button onclick="openPaymentModal('Servicio: Auditoría', 20)" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg text-xs font-semibold">Contratar</button>
+          </div>
+        </div>
+        <div class="glass p-4 rounded-xl space-y-2">
+          <h3 class="font-bold text-white">Campañas Meta Ads</h3>
+          <p class="text-xs text-slate-400">Configuración y optimización de anuncios en FB e IG.</p>
+          <div class="flex justify-between items-center pt-2">
+            <span class="font-bold text-cyan-400">$35 USD</span>
+            <button onclick="openPaymentModal('Servicio: Meta Ads', 35)" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg text-xs font-semibold">Contratar</button>
+          </div>
+        </div>
+        <div class="glass p-4 rounded-xl space-y-2">
+          <h3 class="font-bold text-white">Community Manager (Mensual)</h3>
+          <p class="text-xs text-slate-400">Gestión integral de contenidos, publicaciones y respuestas.</p>
+          <div class="flex justify-between items-center pt-2">
+            <span class="font-bold text-cyan-400">$75 USD/mes</span>
+            <button onclick="openPaymentModal('Servicio: Community Manager', 75)" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-3 py-1.5 rounded-lg text-xs font-semibold">Contratar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. AULA VIRTUAL Y REPRODUCTOR LOCAL -->
+    <section id="sec-aula" class="space-y-4 hidden">
+      <h2 class="text-xl font-bold text-cyan-400 border-b border-slate-800 pb-2">Aula Virtual · Reproductores y Certificados</h2>
+      <div class="glass p-4 rounded-xl space-y-4">
+        <h3 class="font-bold text-white text-base">Reproductor de Lección (Video IA)</h3>
+        <!-- REPRODUCTOR LOCAL SIN DEPENDER DE YOUTUBE -->
+        <div class="bg-black aspect-video rounded-lg flex items-center justify-center border border-slate-800 overflow-hidden">
+          <video id="classPlayer" controls class="w-full h-full object-cover hidden">
+            <source src="" type="video/mp4">
+            Tu navegador no soporta el reproductor de video.
+          </video>
+          <div id="noVideoMsg" class="text-center p-4">
+            <p class="text-slate-400 text-xs">Selecciona una lección para iniciar la reproducción o carga el archivo de video generado con IA desde tu administración.</p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Módulos Disponibles</h4>
+          <div class="space-y-1">
+            <button onclick="playLesson('Lección 1: Definición de Cliente Ideal')" class="w-full text-left p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs text-slate-200 flex justify-between items-center">
+              <span>Módulo 1: Fundamentos de Mercado</span>
+              <span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded">Ver Clase</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- GENERADOR DE CERTIFICADO PDF -->
+        <div class="pt-4 border-t border-slate-800 space-y-2">
+          <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Emisión de Certificado Oficial</h4>
+          <p class="text-xs text-slate-400">Genera tu diploma oficial avalado por la Academia EDRM con firma del Director.</p>
+          <button onclick="generateCertificatePDF()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-lg text-xs font-bold">🎓 Descargar Certificado PDF</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. SECCIÓN DE RESEÑAS -->
+    <section id="sec-resenas" class="space-y-4 hidden">
+      <h2 class="text-xl font-bold text-cyan-400 border-b border-slate-800 pb-2">Opiniones de Nuestros Alumnos</h2>
+      <div id="reviewsList" class="space-y-3">
+        <div class="glass p-3 rounded-xl space-y-1">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-xs text-white">Carlos M.</span>
+            <span class="text-amber-400 text-xs">⭐⭐⭐⭐⭐</span>
+          </div>
+          <p class="text-xs text-slate-300">Excelente la Fase 1. Aprendí a definir mi propuesta de valor y los pagos por Pago Móvil fueron aprobados al instante.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DE PAGO MÓVIL NACIONAL -->
+  <div id="paymentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass p-5 rounded-2xl max-w-sm w-full space-y-4 relative border border-cyan-500/30">
+      <button onclick="closePaymentModal()" class="absolute top-3 right-3 text-slate-400 text-sm">✕</button>
+      <h3 class="font-bold text-base text-white border-b border-slate-800 pb-2">Pasarela Pago Móvil (Venezuela)</h3>
+      
+      <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
+        <p class="text-slate-400">Ítem: <span id="payItemName" class="font-bold text-white"></span></p>
+        <p class="text-slate-400">Monto USD: <span id="payAmountUSD" class="font-bold text-cyan-400"></span></p>
+        <p class="text-slate-400">Total en Bolívares (BCV): <span id="payAmountVES" class="font-bold text-emerald-400"></span></p>
+      </div>
+
+      <!-- DATOS OFICIALES DE PAGO MÓVIL -->
+      <div class="bg-cyan-950/40 p-3 rounded-xl border border-cyan-500/20 text-xs space-y-1">
+        <p class="font-bold text-cyan-300">Datos para la Transferencia:</p>
+        <p class="text-slate-300"><b>Banco:</b> Banco de Venezuela (0102)</p>
+        <p class="text-slate-300"><b>Cédula / RIF:</b> V-11.480.449</p>
+        <p class="text-slate-300"><b>Teléfono:</b> 0412-2937944</p>
+      </div>
+
+      <form onsubmit="submitPayment(event)" class="space-y-3">
+        <div>
+          <label class="text-[11px] text-slate-400 block mb-1">Nombre Completo</label>
+          <input type="text" id="payUserName" required class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white">
+        </div>
+        <div>
+          <label class="text-[11px] text-slate-400 block mb-1">Número de Referencia de Pago Móvil</label>
+          <input type="text" id="payRef" required placeholder="Ej. 123456" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white">
+        </div>
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-lg text-xs">Enviar Comprobante</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PANEL DE ADMINISTRACIÓN SUPERADMIN -->
+  <div id="adminModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
+    <div class="glass p-5 rounded-2xl max-w-md w-full space-y-4 max-h-[90vh] overflow-y-auto border border-cyan-500/40">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <h3 class="font-bold text-white text-base">Panel de Superadministrador</h3>
+        <button onclick="toggleAdminModal()" class="text-slate-400 text-sm">✕</button>
+      </div>
+
+      <!-- LOGIN ADMIN -->
+      <div id="adminAuthSection" class="space-y-3">
+        <p class="text-xs text-slate-400">Ingresa tu clave de acceso para gestionar la plataforma:</p>
+        <input type="password" id="adminPassInput" placeholder="Clave de seguridad" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white">
+        <button onclick="verifyAdminPass()" class="w-full bg-cyan-500 text-slate-950 font-bold py-2 rounded-lg text-xs">Acceder</button>
+      </div>
+
+      <!-- CONTENIDO ADMIN (OCULTO HASTA VALIDAR) -->
+      <div id="adminDashboardSection" class="space-y-4 hidden">
+        <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded-xl text-xs">
+          <span class="text-slate-400">Aprobación de Pagos Móviles</span>
+          <span class="text-emerald-400 font-bold" id="adminPendingCount">0 Pendientes</span>
+        </div>
+        <div id="adminPaymentsList" class="space-y-2 max-h-40 overflow-y-auto">
+          <!-- Se cargan dinámicamente -->
+        </div>
+
+        <div class="border-t border-slate-800 pt-3 space-y-2">
+          <h4 class="text-xs font-bold text-cyan-400">Ajuste de Tasa BCV Manual</h4>
+          <div class="flex gap-2">
+            <input type="number" id="manualBcvRate" step="0.01" placeholder="Ej. 876.80" class="flex-1 bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white">
+            <button onclick="updateManualRate()" class="bg-cyan-500 text-slate-950 font-bold px-3 py-2 rounded-lg text-xs">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ESTADO GLOBAL DE LA PLATAFORMA
+    let currentBcvRate = 876.80; // Tasa por defecto
+    let activePayments = [];
+
+    // INICIALIZACIÓN Y CONSUMO DE API BCV
+    async function initPlatform() {
+      try {
+        const res = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
+        const data = await res.json();
+        if(data && data.promedio) {
+          currentBcvRate = parseFloat(data.promedio);
+        }
+      } catch(e) {
+        console.log("Usando tasa de contingencia BCV");
+      }
+      document.getElementById('bcvBadge').innerText = `BCV: ${currentBcvRate.toFixed(2)} Bs`;
+      updateCalculatedPrices();
+    }
+
+    function updateCalculatedPrices() {
+      const calc = (usd) => (usd * currentBcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 }) + ' Bs';
+      document.getElementById('price-c1-ves').innerText = calc(10);
+      document.getElementById('price-c2-ves').innerText = calc(15);
+      document.getElementById('price-c3-ves').innerText = calc(25);
+      document.getElementById('price-c4-ves').innerText = calc(40);
+    }
+
+    // NAVEGACIÓN ENTRE PESTAÑAS
+    function switchTab(tab) {
+      ['cursos', 'agencia', 'aula', 'resenas'].forEach(t => {
+        document.getElementById(`sec-${t}`).classList.add('hidden');
+        document.getElementById(`tab-${t}`).className = 'flex-1 py-2 px-3 rounded-lg text-slate-400 hover:text-white';
+      });
+      document.getElementById(`sec-${tab}`).classList.remove('hidden');
+      document.getElementById(`tab-${tab}`).className = 'flex-1 py-2 px-3 rounded-lg bg-cyan-500 text-slate-950 font-bold';
+    }
+
+    // LÓGICA DE MODAL Y PAGOS
+    let selectedItem = {};
+    function openPaymentModal(name, usd) {
+      selectedItem = { name, usd };
+      document.getElementById('payItemName').innerText = name;
+      document.getElementById('payAmountUSD').innerText = `$${usd} USD`;
+      document.getElementById('payAmountVES').innerText = `${(usd * currentBcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })} Bs`;
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
+    function closePaymentModal() { document.getElementById('paymentModal').classList.add('hidden'); }
+
+    function submitPayment(e) {
+      e.preventDefault();
+      const userName = document.getElementById('payUserName').value;
+      const ref = document.getElementById('payRef').value;
+      activePayments.push({ userName, ref, item: selectedItem.name, usd: selectedItem.usd, status: 'Pendiente' });
+      alert("¡Comprobante enviado con éxito! Tu acceso será habilitado una vez verificado por la administración.");
+      closePaymentModal();
+    }
+
+    // LÓGICA DEL REPRODUCTOR
+    function playLesson(title) {
+      const player = document.getElementById('classPlayer');
+      document.getElementById('noVideoMsg').classList.add('hidden');
+      player.classList.remove('hidden');
+      player.play();
+    }
+
+    // GENERACIÓN DE CERTIFICADO PDF OFICIAL CON FIRMA DE DIRECTOR EDRM
+    function generateCertificatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'landscape' });
+
+      // Fondo y marco diplomático
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, 297, 210, 'F');
+      doc.setDrawColor(0, 240, 255);
+      doc.setLineWidth(2);
+      doc.rect(10, 10, 277, 190);
+
+      // Encabezado institucional
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(14);
+      doc.text("REPÚBLICA BOLIVARIANA DE VENEZUELA", 148.5, 30, { align: 'center' });
+      doc.setFontSize(12);
+      doc.setTextColor(0, 240, 255);
+      doc.text("ACADEMIA & ESTUDIO CREATIVO EDRM", 148.5, 38, { align: 'center' });
+
+      // Título
+      doc.setFontSize(28);
+      doc.setTextColor(255, 255, 255);
+      doc.text("CERTIFICADO DE APROBACIÓN", 148.5, 65, { align: 'center' });
+
+      // Texto de concesión
+      doc.setFontSize(12);
+      doc.setTextColor(200, 200, 200);
+      doc.text("Se otorga el presente reconocimiento oficial a:", 148.5, 85, { align: 'center' });
+
+      // Nombre del estudiante
+      doc.setFontSize(22);
+      doc.setTextColor(0, 240, 255);
+      doc.text("ESTUDIANTE CERTIFICADO", 148.5, 105, { align: 'center' });
+
+      doc.setFontSize(12);
+      doc.setTextColor(200, 200, 200);
+      doc.text("Por haber culminado satisfactoriamente la formación profesional en:", 148.5, 125, { align: 'center' });
+      
+      doc.setFontSize(16);
+      doc.setTextColor(255, 255, 255);
+      doc.text("MARKETING DIGITAL, REDES E INTELIGENCIA ARTIFICIAL", 148.5, 140, { align: 'center' });
+
+      // Firma oficial
+      doc.setDrawColor(255, 255, 255);
+      doc.line(108.5, 175, 188.5, 175);
+      doc.setFontSize(11);
+      doc.setTextColor(255, 255, 255);
+      doc.text("Director Académico EDRM", 148.5, 182, { align: 'center' });
+      doc.setFontSize(9);
+      doc.setTextColor(150, 150, 150);
+      doc.text("Firma Autorizada y Sello Digital", 148.5, 188, { align: 'center' });
+
+      doc.save("Certificado_Oficial_EDRM.pdf");
+    }
+
+    // PANEL ADMIN Y CLAVE DE ACCESO
+    function toggleAdminModal() { document.getElementById('adminModal').classList.toggle('hidden'); }
+    function verifyAdminPass() {
+      const pass = document.getElementById('adminPassInput').value;
+      if(pass === '04122937944') {
+        document.getElementById('adminAuthSection').classList.add('hidden');
+        document.getElementById('adminDashboardSection').classList.remove('hidden');
+        renderAdminPayments();
+      } else {
+        alert("Clave incorrecta");
+      }
+    }
+
+    function renderAdminPayments() {
+      const list = document.getElementById('adminPaymentsList');
+      list.innerHTML = '';
+      document.getElementById('adminPendingCount').innerText = `${activePayments.length} Pendientes`;
+      
+      activePayments.forEach((p, idx) => {
+        const item = document.createElement('div');
+        item.className = 'bg-slate-900 p-2 rounded text-xs flex justify-between items-center';
+        item.innerHTML = `
+          <div>
+            <p class="font-bold text-white">${p.userName} (${p.item})</p>
+            <p class="text-[10px] text-slate-400">Ref: ${p.ref} - $${p.usd}</p>
+          </div>
+          <button onclick="approvePayment(${idx})" class="bg-emerald-500 text-slate-950 font-bold px-2 py-1 rounded text-[10px]">Aprobar</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function approvePayment(idx) {
+      alert(`Pago de ${activePayments[idx].userName} APROBADO. Curso desbloqueado.`);
+      activePayments.splice(idx, 1);
+      renderAdminPayments();
+    }
+
+    function updateManualRate() {
+      const val = parseFloat(document.getElementById('manualBcvRate').value);
+      if(val) {
+        currentBcvRate = val;
+        document.getElementById('bcvBadge').innerText = `BCV: ${currentBcvRate.toFixed(2)} Bs`;
+        updateCalculatedPrices();
+        alert("Tasa actualizada correctamente");
+      }
+    }
+
+    // CARGA INICIAL
+    window.onload = initPlatform;
+  </script>
+</body>
+</html>
